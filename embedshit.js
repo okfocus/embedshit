@@ -43,7 +43,7 @@ $("#fourthree").on("click", function(){
 });
 
 $("#other").on("click", function(){
-  $(".other_aspect").show();
+  $(".other_aspect").toggle();
 });
 
 var determineProvider = function (url) {
@@ -77,6 +77,7 @@ var determineProvider = function (url) {
 };
 
 function load (url) {
+  if (timeout) clearTimeout(timeout);
   url = url.replace(/^\s/,"").replace(/\s$/,"");
   if (url.length == 0) return;
 
@@ -96,7 +97,6 @@ function load (url) {
 
   v = video;
   $iframe = newIframe();
-  clearTimeout(timeout);
   ready = false;
 
   switch (video.provider) {
@@ -130,6 +130,7 @@ function newIframe (){
   $(".video").empty().append($iframe);
   return $iframe;
 }
+
 function sigdig(n){ return Math.floor(100 * n) }
 function setVideoDimensions (w,h) {
   var sig_aspect = sigdig(w/h);
@@ -148,17 +149,18 @@ function setVideoDimensions (w,h) {
   $("[name=aspect_height]").val( aspect_height );
 }
 function setCropDimensions (w,h) {
-  var top, left;
   width = parseInt( w );
   height = parseInt( h );
   $("[name=width]").val( width );
   $("[name=height]").val( height );
   resize();
 }
+
 function resize () {
-  var w, h;
+  var w, h, top, left;
   $iframe.parent().css({ width: width, height: height, overflow: "hidden", position: "relative" });
 
+console.log(width/height, aspect_width/aspect_height);
   if (width/height >= aspect_width / aspect_height) {
     w = width;
     h = aspect_height / aspect_width * width;
@@ -173,51 +175,16 @@ function resize () {
   }
   $iframe.css({ position: 'absolute', top: top, left: left, width: w, height: h }).attr({ width: w, height: h });
 }
-var loadedJS = {};
-function insertJS (src, callback){
-  if (loadedJS[src]) return callback();
-  loadedJS[src] = true;
-  var tag = document.createElement('script');
-
-  if (callback){
-    if (tag.readyState){  //IE
-      tag.onreadystatechange = function(){
-        if (tag.readyState === "loaded" ||
-            tag.readyState === "complete"){
-          tag.onreadystatechange = null;
-          callback();
-        }
-      };
-    } else {
-      tag.onload = function() {
-        callback();
-      };
-    }
-  }
-  tag.src = src;
-  var firstScriptTag = document.getElementsByTagName('script')[0];
-  firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
-};
-
 
 // http://youtube.com/embed/JbY-LoRxdO0
 function init_youtube(){
   $("#aspect").show();
   $("[name=mute]").removeAttr("checked");
 
-  var URL = "https://www.googleapis.com/youtube/v3/videos";
-  var params = {
-    id: v.id
-  , part: 'player'
-  , key: 'AIzaSyBrxodlVWBh-v7J3F4wdEGii9rk3IewqZY'
-  };
-  $.get(URL, params, function(data){
-    var html = data.items[0].player.embedHtml;
-    var match = /width=\D(\d+)\D height=\D(\d+)\D/.exec(html);
-    setVideoDimensions( match[1], match[2] );
-    setCropDimensions( match[1], match[2] );
-    load_youtube();
-  }, "jsonp")
+  setVideoDimensions( 640, 360 );
+  setCropDimensions( 640, 360 );
+
+  load_youtube();
 }
 function load_youtube(){
   var params = [];
@@ -248,26 +215,9 @@ function init_vimeo(){
 
   $iframe.attr("src", src);
 
-  // insertJS('http://a.vimeocdn.com/js/froogaloop2.min.js', function(){
-  insertJS('froogaloop.min.js', function(){
-
-    var player = $f($iframe[0]);
-
-    // hide player until Vimeo hides controls...
-    window.setTimeout($('#okplayer').css('visibility', 'visible'), 2000);
-
-    player.addEvent("ready", function(){
-      if (! ready) {
-        ready = true;
-        player.api('getVideoEmbedCode', function (html, player_id) {
-          var match = /width="(\d+)" height="(\d+)"/.exec(html);
-          setVideoDimensions( match[1], match[2] );
-          setCropDimensions( match[1], match[2] );
-          load_vimeo();
-        }, false);
-      }
-    });
-  });
+  setVideoDimensions( 640, 360 );
+  setCropDimensions( 640, 360 );
+  load_vimeo();
 }
 
 function load_vimeo(){
@@ -307,7 +257,7 @@ function load_vine(){
   if (parseInt(height) > parseInt(width)) {
     height = width;
   }
-  setCropDimensions( 500, 500 );
+  setCropDimensions( width, height );
 
   if (params.length) {
     src = src + "?" + params.join("&");
