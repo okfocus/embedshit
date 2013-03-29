@@ -149,7 +149,6 @@ function setVideoDimensions (w,h) {
   $("[name=aspect_height]").val( aspect_height );
 }
 function setCropDimensions (w,h) {
-  var top, left;
   width = parseInt( w );
   height = parseInt( h );
   $("[name=width]").val( width );
@@ -158,9 +157,10 @@ function setCropDimensions (w,h) {
 }
 
 function resize () {
-  var w, h;
+  var w, h, top, left;
   $iframe.parent().css({ width: width, height: height, overflow: "hidden", position: "relative" });
 
+console.log(width/height, aspect_width/aspect_height);
   if (width/height >= aspect_width / aspect_height) {
     w = width;
     h = aspect_height / aspect_width * width;
@@ -175,32 +175,6 @@ function resize () {
   }
   $iframe.css({ position: 'absolute', top: top, left: left, width: w, height: h }).attr({ width: w, height: h });
 }
-var loadedJS = {};
-function insertJS (src, callback){
-  if (loadedJS[src]) return callback();
-  loadedJS[src] = true;
-  var tag = document.createElement('script');
-
-  if (callback){
-    if (tag.readyState){  //IE
-      tag.onreadystatechange = function(){
-        if (tag.readyState === "loaded" ||
-            tag.readyState === "complete"){
-          tag.onreadystatechange = null;
-          callback();
-        }
-      };
-    } else {
-      tag.onload = function() {
-        callback();
-      };
-    }
-  }
-  tag.src = src;
-  var firstScriptTag = document.getElementsByTagName('script')[0];
-  firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
-};
-
 
 // http://youtube.com/embed/JbY-LoRxdO0
 function init_youtube(){
