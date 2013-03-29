@@ -77,6 +77,7 @@ var determineProvider = function (url) {
 };
 
 function load (url) {
+  if (timeout) clearTimeout(timeout);
   url = url.replace(/^\s/,"").replace(/\s$/,"");
   if (url.length == 0) return;
 
@@ -96,7 +97,6 @@ function load (url) {
 
   v = video;
   $iframe = newIframe();
-  clearTimeout(timeout);
   ready = false;
 
   switch (video.provider) {
@@ -130,6 +130,7 @@ function newIframe (){
   $(".video").empty().append($iframe);
   return $iframe;
 }
+
 function sigdig(n){ return Math.floor(100 * n) }
 function setVideoDimensions (w,h) {
   var sig_aspect = sigdig(w/h);
@@ -155,6 +156,7 @@ function setCropDimensions (w,h) {
   $("[name=height]").val( height );
   resize();
 }
+
 function resize () {
   var w, h;
   $iframe.parent().css({ width: width, height: height, overflow: "hidden", position: "relative" });
