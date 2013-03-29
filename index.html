@@ -74,13 +74,16 @@
          font-weight:bold;
          }
          :-moz-placeholder { 
-         color: black;  
+	       color: black;
+	       font-weight:bold;
          }
          ::-moz-placeholder { 
-         color: black;  
+	       color: black;
+	       font-weight:bold;
          }
          :-ms-input-placeholder {  
-         color: black;  
+	       color: black;
+	       font-weight:bold;
          }
          #video {
          float:left;
@@ -119,7 +122,17 @@
          51%{ opacity: 0.0; }
          100%{ opacity: 0.0; }
          }
+         @-moz-keyframes blink_on {  
+         0% { opacity: 1.0; }
+         50%{ opacity: 1.0; }
+         51%{ opacity: 0.0; }
+         100%{ opacity: 0.0; }
+         }
          blink {
+	       -moz-animation-name: blink_on;
+	       -moz-animation-iteration-count: infinite;  
+	       -moz-animation-timing-function: cubic-bezier(1.0,0,0,1.0);
+	       -moz-animation-duration: 1.5s;
          -webkit-animation-name: blink_on;
          -webkit-animation-iteration-count: infinite;  
          -webkit-animation-timing-function: cubic-bezier(1.0,0,0,1.0);
