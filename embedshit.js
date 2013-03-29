@@ -1,6 +1,6 @@
 $(function(){
 
-var v, cb, timeout, $iframe, ready, real_width, real_height, width, height;
+var v, cb, timeout, $iframe, ready, aspect_width, aspect_height, width, height;
 
 $("#url").on("blur change", function(){
 	load( $(this).val() );
@@ -12,8 +12,19 @@ $("#examples span").on("click", function(){
 	load( url );
 });
 
-$("#fields input").change(function(){
+$("#fields input:not(.aspect)").change(function(){
 	if (timeout) clearTimeout(timeout);
+	timeout = setTimeout(cb, 500);
+}).each(function(){
+	$(this).next("label").attr("for", $(this).attr("name")).append("<br>");
+});
+
+$("#fields input.aspect").change(function(){
+	if (timeout) clearTimeout(timeout);
+	var w = $("[name=aspect_width]").val();
+	var h = $("[name=aspect_height]").val();
+	setVideoDimensions(w, h);
+	resize();
 	timeout = setTimeout(cb, 500);
 }).each(function(){
 	$(this).next("label").attr("for", $(this).attr("name")).append("<br>");
@@ -33,6 +44,10 @@ $("#fourthree").on("click", function(){
 
 $("#other").on("click", function(){
 	$(".other_aspect").show();
+});
+
+$("#embed_code").click(function(){
+	this.select();
 });
 
 
@@ -120,21 +135,48 @@ function newIframe (){
 	$(".video").empty().append($iframe);
 	return $iframe;
 }
+function sigdig(n){ return Math.floor(100 * n) }
 function setVideoDimensions (w,h) {
-	real_width = w;
-	real_height = h;
-	$("[name=real_width]").val( w );
-	$("[name=real_height]").val( h );
-	$iframe.attr({ width: w, height: h });
+	var sig_aspect = sigdig(w/h);
+	if (sigdig(16/9) == sig_aspect) {
+		w = 16; h = 9;
+	}
+	else if (sigdig(4/3) == sig_aspect) {
+		w = 4; h = 3;
+	}
+	else if (sigdig(1/1) == sig_aspect) {
+		w = h = 1;
+	}
+	aspect_width = parseInt( w );
+	aspect_height = parseInt( h );
+	$("[name=aspect_width]").val( aspect_width );
+	$("[name=aspect_height]").val( aspect_height );
 }
 function setCropDimensions (w,h) {
-	width = w;
-	height = h;
-	$("[name=width]").val( w );
-	$("[name=height]").val( h );
+	var top, left;
+	width = parseInt( w );
+	height = parseInt( h );
+	$("[name=width]").val( width );
+	$("[name=height]").val( height );
+	resize();
 }
 function resize () {
-	$iframe.attr({ width: w, height: h });
+	var w, h;
+	$iframe.parent().css({ width: width, height: height, overflow: "hidden", position: "relative" });
+
+	if (width/height >= aspect_width / aspect_height) {
+		w = width;
+		h = aspect_height / aspect_width * width;
+		left = 0;
+		top = (height - h) / 2;
+	}
+	else {
+		h = height;
+		w = aspect_width / aspect_height * height;
+		left = (width - w) / 2;
+		top = 0;
+	}
+	$iframe.css({ position: 'absolute', top: top, left: left, width: w, height: h }).attr({ width: w, height: h });
 }
 var loadedJS = {};
 function insertJS (src, callback){
