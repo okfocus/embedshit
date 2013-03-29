@@ -26,8 +26,9 @@ body {
 }
 #embed_code {
 	display:none;
+	height:200px;
 	resize: none; 
-	height: 100px;
+	font-family:monospace;
 }
 
 #rapper {
@@ -73,20 +74,27 @@ h1 {
    color: black;  
 }
 
-#video {
-	float:left;
+.videorapper {
+	float: left;
 }
-#video iframe {
+.video {
+	float: left;
+}
+.video iframe {
 	float: right;
 	margin: 0;
 }
 #fields {
+	display: none;
 	text-align: left;
 	margin: 0 auto;
 }
 #fields td {
-	padding:2px 18px;
+	padding: 2px 18px;
 	font-size:12px;
+}
+.other_aspect {
+	display: none;
 }
 .clear {
 	clear:both;
@@ -135,4 +143,3 @@ h2 {
 h5 {
 	margin: 18px 0;
 }
-

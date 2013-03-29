@@ -1,24 +1,44 @@
 $(function(){
 
-var v, cb, timeout, $iframe, ready;
+var v, cb, timeout, $iframe, ready, real_width, real_height, width, height;
+$(window).focus(function(){
+	$("#url").focus();
+});
+
+$("#url").on("blur change", function(){
+	load( $(this).val() );
+}).focus();
+
+$("#examples span").on("click", function(){
+	var url = $(this).data('video');
+	$("#url").val(url);
+	load( url );
+});
+
 $("#fields input").change(function(){
 	if (timeout) clearTimeout(timeout);
 	timeout = setTimeout(cb, 500);
 }).each(function(){
 	$(this).next("label").attr("for", $(this).attr("name")).append("<br>");
 });
-$("#url").on("keyup blur", function(){
-	load( $(this).val() );
-}).focus();
-$("#examples span").on("click", function(){
-	load( $(this).data('video') );
+
+$("#sixteennine").on("click", function(){
+	height = width / 16 * 9;
+	setVideoDimensions( width, height );
+	setCropDimensions( width, height );
 });
-$(window).focus(function(){
-	$("#url").focus();
+
+$("#fourthree").on("click", function(){
+	height = width / 4 * 3;
+	setVideoDimensions( width, height );
+	setCropDimensions( width, height );
+});
+
+$("#other").on("click", function(){
+	$(".other_aspect").show();
 });
 
 
-// is it from youtube or vimeo?
 var determineProvider = function (url) {
 
 	if (/youtube.googleapis.com/.test(url)){
@@ -56,19 +76,19 @@ function load (url) {
   var video = determineProvider(url);
 
 	$("#video_provider").html(video.provider);
-	$("#video_id").html(video.id);
+	$("#video_id").html (video.id);
 
+	$("#embed_code").show();
+
+	$("#fields").show();
 	$("#fields input").hide();
 	$("#fields label").hide();
 	$("." + video.provider).show().each(function(){
 		$(this).next("label").show();
-		$("#embed_code").show();
-		$("#examples").hide();
-		
 	});
 
 	v = video;
-	$iframe = new_iframe();
+	$iframe = newIframe();
 	clearTimeout(timeout);
 	ready = false;
 
@@ -86,11 +106,11 @@ function load (url) {
     case 'vine':
 			init_vine(v);
 			cb = load_vine;
+			load_vine();
       break;
   }
-	cb();
 }
-function new_iframe (){
+function newIframe (){
 	var $iframe = $("<iframe>").attr({
 	  frameborder: 0
 	, scrolling: "no"
@@ -100,8 +120,24 @@ function new_iframe (){
 	, allowfullscreen: "allowfullscreen"
 	, id: "okplayer"
 	});
-	$("#video").empty().append($iframe);
+	$(".video").empty().append($iframe);
 	return $iframe;
+}
+function setVideoDimensions (w,h) {
+	real_width = w;
+	real_height = h;
+	$("[name=real_width]").val( w );
+	$("[name=real_height]").val( h );
+	$iframe.attr({ width: w, height: h });
+}
+function setCropDimensions (w,h) {
+	width = w;
+	height = h;
+	$("[name=width]").val( w );
+	$("[name=height]").val( h );
+}
+function resize () {
+	$iframe.attr({ width: w, height: h });
 }
 var loadedJS = {};
 function insertJS (src, callback){
@@ -129,8 +165,10 @@ function insertJS (src, callback){
   firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
 };
 
+
 // http://youtube.com/embed/JbY-LoRxdO0
 function init_youtube(){
+	$("#aspect").show();
 	$("[name=mute]").removeAttr("checked");
 
 	var URL = "https://www.googleapis.com/youtube/v3/videos";
@@ -142,31 +180,29 @@ function init_youtube(){
 	$.get(URL, params, function(data){
 		var html = data.items[0].player.embedHtml;
 	  var match = /width=\D(\d+)\D height=\D(\d+)\D/.exec(html);
-	  $("[name=width]").val( match[1] );
-	  $("[name=height]").val( match[2] );
-	  $iframe.width( match[1] );
-	  $iframe.height( match[2] );
+	  setVideoDimensions( match[1], match[2] );
+		setCropDimensions( match[1], match[2] );
 		load_youtube();
 	}, "jsonp")
 }
-
 function load_youtube(){
 	var params = [];
 	var src = "http://youtube.com/embed/" + v.id;
-	var width = $("[name=width]").val();
-	var height = $("[name=height]").val();
+	var w = $("[name=width]").val();
+	var h = $("[name=height]").val();
 	$(".youtube:checked").each(function(){
 		params.push( this.name + "=" + this.value );
 	});
 	if ($("[name=loop]:checked")) params.push( "playlist=" + v.id );
 	if (params.length) src += "?" + params.join("&");
-	$iframe.attr({ width: width, height: height });
+	setCropDimensions( w, h );
 	$iframe.attr("src", src);
-	$("#embed_code").val( $("#video").html() );
+	$("#embed_code").val( $(".video_rapper").html() );
 }
 
 // http://player.vimeo.com/video/7100569
 function init_vimeo(){
+	$("#aspect").show();
 	$("[name=mute]").removeAttr("checked");
 	var src = "http://player.vimeo.com/video/" + v.id + '?api=1&js_api=1&title=0&byline=0&portrait=0&playbar=0&player_id=okplayer';
 	$iframe.attr("src", src);
@@ -185,40 +221,33 @@ function init_vimeo(){
 				ready = true;
 	  		player.api('getVideoEmbedCode', function (html, player_id) {
 	  			var match = /width="(\d+)" height="(\d+)"/.exec(html);
-	  			$("[name=width]").val( match[1] );
-	  			$("[name=height]").val( match[2] );
-	  			$iframe.width( match[1] );
-	  			$iframe.height( match[2] );
+					setVideoDimensions( match[1], match[2] );
+					setCropDimensions( match[1], match[2] );
+					load_vimeo();
 	  		}, false);
 			}
-/*
-	    if (OKEvents.utils.isMobile()) {
-  	    // mobile devices cannot listen for play event
- 	      OKEvents.v.onPlay();
- 	    } else {
-        player.addEvent('play', OKEvents.v.onPlay());
-        player.addEvent('pause', OKEvents.v.onPause());
-        player.addEvent('finish', OKEvents.v.onFinish());
-      }
-*/
 		});
-
 	});
 }
 
 function load_vimeo(){
-	var width = $("[name=width]").val();
-	var height = $("[name=height]").val();
-	$iframe.attr({ width: width, height: height });
+	width = $("[name=width]").val();
+	height = $("[name=height]").val();
+	setCropDimensions( width, height );
 
 	var src = "http://player.vimeo.com/video/" + v.id + '?api=1&js_api=1&title=0&byline=0&portrait=0&playbar=0&player_id=okplayer';
-	$iframe.attr("src", src).css({ width: width, height: height });
-	$("#embed_code").val( $("#video").html() );
+	$iframe.attr("src", src);
+	$("#embed_code").val( $(".video_rapper").html() );
 }
+
 
 // https://vine.co/v/bnrtW52x1uJ/card?mute=1
 function init_vine(){
+	$("#aspect").hide();
+	$(".other_aspect").hide();
 	$("[name=mute]").attr("checked","checked");
+	setVideoDimensions( 500, 500 );
+	setCropDimensions( 500, 500 );
 }
 function load_vine(){
 	var src = "https://vine.co/v/" + v.id + "/card";
@@ -232,15 +261,14 @@ function load_vine(){
 	if (parseInt(height) > parseInt(width)) {
 		height = width;
 	}
-	$iframe.attr({ width: width, height: height });
+	setCropDimensions( 500, 500 );
 
 	if (params.length) {
 		src = src + "?" + params.join("&");
 	}
 
 	$iframe[0].src = src;
-	$("#embed_code").val( $("#video").html() );
+	$("#embed_code").val( $(".video_rapper").html() );
 }
 
 });
-

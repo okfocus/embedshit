@@ -38,19 +38,52 @@
 	src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
 	</script>
 
-<h1>EMBED SHIT<img src="https://s3.amazonaws.com/luckyplop/f16edee862e1c2a44dba708a4fcd757d573ab48a.gif"style="position: absolute;margin-top: 23px;margin-left: 5px;"></h1>
+	<script type="text/javascript"
+	src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
+	</script>
+<h1>EMBEDSHIT<img src=
+	"https://s3.amazonaws.com/luckyplop/f16edee862e1c2a44dba708a4fcd757d573ab48a.gif"style="position: absolute;margin-top: 23px;margin-left: 5px;"></h1>
 <h2><blink>WARNING:</blink> THIS SITE MAKES IT SUPER-DUPER EASY TO EMBED VIDEOS INTO YOUR WEBSITE/BLOG/FACE GIVING YOU EASY ACCESS TO PARAMETERS SUCH AS AUTOPLAY AND LOOP.</h2><h5><span style="color:red">PLEASE UNDERSTAND</span> – THIS WEBSITE WAS MADE BY THE INTERNET GURUS OVER AT <a href="http://okfoc.us">OKFOCUS</a>.</h5>
 <input id="url" type="text" placeholder="Paste a video URL here! (Youtube, Vimeo, Vine)">
 <br>
 <div id="examples">Test it with a :
-<span data-video="http://www.youtube.com/watch?v=E_IsY7uxlR8">youtube video</span>
-<span data-video="http://vimeo.com/4643502">vimeo video</span>
+<span data-video="http://www.youtube.com/watch?v=E_IsY7uxlR8">youtube</span>
+<span data-video="http://vimeo.com/4643502">vimeo</span>
 <span data-video="https://vine.co/v/bD93lqlUOFL">vine</span>
 </div>
 </header>
 <br class="clear">
-<div id="video"></div>
+<div class="video_rapper"><div class="video"></div></div>
 <table id="fields">
+
+<tr id="aspect">
+	<td>
+		<label class="youtube vimeo">aspect</label>
+	</td>
+	<td>
+		<button id="sixteennine">16:9</button>
+		<button id="fourthree">4:3</button>
+		<button id="other">other</button>
+	</td>
+</tr>
+
+<tr class="other_aspect">
+	<td>
+		<label class="youtube vimeo">real width</label>
+	</td>
+	<td>
+		<input class="youtube vimeo vine" type="text" name="real_width" value="500"> 
+	</td>
+</tr>
+<tr class="other_aspect">
+	<td>
+		<label class="youtube vimeo">real height</label>
+	</td>
+	<td>
+		<input class="youtube vimeo vine" type="text" name="real_height" value="500"> 
+	</td>
+</tr>
+
 <tr>
 	<td>
 		<label class="youtube vimeo vine">width</label>
@@ -154,6 +187,7 @@
 	</td>
 	<td>
 		<textarea id="embed_code"></textarea><br>
+		<label class="youtube vimeo vine"><button>copy embed code</button></label>
 	</td>
 </tr>
 </table>
