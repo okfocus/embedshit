@@ -192,6 +192,12 @@ function load_youtube(){
   var w = $("[name=width]").val();
   var h = $("[name=height]").val();
   $(".youtube:checked").each(function(){
+		if (firstLoad && this.name === 'autoplay') {
+			$("#url").val("");
+			firstLoad = false;
+    	params.push( "autoplay=0" );
+			return;
+		}
     params.push( this.name + "=" + this.value );
   });
   if ($("[name=loop]:checked")) params.push( "playlist=" + v.id );
@@ -267,4 +273,8 @@ function load_vine(){
   $("#embed_code").val( $(".video_rapper").html() );
 }
 
+var firstLoad = true;
+$("#examples span").first().trigger("click");
+
 });
+
