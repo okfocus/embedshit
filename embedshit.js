@@ -46,11 +46,6 @@ $("#other").on("click", function(){
 	$(".other_aspect").show();
 });
 
-$("#embed_code").click(function(){
-	this.select();
-});
-
-
 var determineProvider = function (url) {
 
 	if (/youtube.googleapis.com/.test(url)){
