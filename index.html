@@ -102,7 +102,7 @@
          }
          #examples {
          font-size:12px;
-         margin:10px 0;
+         margin:20px 0 0 0;
          }
          #examples span {
          cursor: pointer;
@@ -292,7 +292,7 @@
                         <label class="youtube vimeo vine">your embed code:</label>
                      </td>
                      <td>
-                        <textarea id="embed_code"></textarea><br>
+                        <textarea id="embed_code" onClick="this.select();"></textarea><br>
                      </td>
                   </tr>
                </table>
@@ -371,7 +371,6 @@
       			$("." + video.provider).show().each(function(){
       				$(this).next("label").show();
       				$("#embed_code").show();
-      				$("#examples").hide();
       
       			});
       
