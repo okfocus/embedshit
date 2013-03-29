@@ -1,9 +1,6 @@
 $(function(){
 
 var v, cb, timeout, $iframe, ready, real_width, real_height, width, height;
-$(window).focus(function(){
-	$("#url").focus();
-});
 
 $("#url").on("blur change", function(){
 	load( $(this).val() );
@@ -204,7 +201,14 @@ function load_youtube(){
 function init_vimeo(){
 	$("#aspect").show();
 	$("[name=mute]").removeAttr("checked");
+
 	var src = "http://player.vimeo.com/video/" + v.id + '?api=1&js_api=1&title=0&byline=0&portrait=0&playbar=0&player_id=okplayer';
+
+	if ($("[name=loop]:checked").length > 0) src += "&loop=1";
+	else src += "&loop=0";
+	if ($("[name=autoplay]:checked").length > 0) src += "&autoplay=1";
+	else src += "&autoplay=0";
+
 	$iframe.attr("src", src);
 
   // insertJS('http://a.vimeocdn.com/js/froogaloop2.min.js', function(){
@@ -216,7 +220,6 @@ function init_vimeo(){
   	window.setTimeout($('#okplayer').css('visibility', 'visible'), 2000);
 
 		player.addEvent("ready", function(){
-			if ($("[name=autoplay]:checked")) player.api('play');
 			if (! ready) {
 				ready = true;
 	  		player.api('getVideoEmbedCode', function (html, player_id) {
@@ -236,6 +239,13 @@ function load_vimeo(){
 	setCropDimensions( width, height );
 
 	var src = "http://player.vimeo.com/video/" + v.id + '?api=1&js_api=1&title=0&byline=0&portrait=0&playbar=0&player_id=okplayer';
+
+	if ($("[name=loop]:checked").length > 0) src += "&loop=1";
+	else src += "&loop=0";
+	if ($("[name=autoplay]:checked").length > 0) src += "&autoplay=1";
+	else src += "&autoplay=0";
+	
+	console.log(src);
 	$iframe.attr("src", src);
 	$("#embed_code").val( $(".video_rapper").html() );
 }
