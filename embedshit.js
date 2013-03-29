@@ -207,8 +207,8 @@ function init_youtube(){
   $("#aspect").show();
   $("[name=mute]").removeAttr("checked");
 
-  setVideoDimensions( 500, 280 );
-  setCropDimensions( 500, 280 );
+  setVideoDimensions( 640, 360 );
+  setCropDimensions( 640, 360 );
 
   load_youtube();
 }
@@ -241,8 +241,8 @@ function init_vimeo(){
 
   $iframe.attr("src", src);
 
-  setVideoDimensions( 500, 280 );
-  setCropDimensions( 500, 280 );
+  setVideoDimensions( 640, 360 );
+  setCropDimensions( 640, 360 );
   load_vimeo();
 }
 
