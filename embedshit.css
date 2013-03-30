@@ -27,11 +27,11 @@ body {
 	resize: none;
 	height: 100px;
 }
-
 #rapper {
 	font-family: 'helvetica',sans-serif;
 	width: 960px;
 	margin: 0 auto;
+	padding-bottom: 50px;
 }
 h1 {
 	font-size: 96px;
@@ -53,7 +53,6 @@ h1 {
 	box-shadow: -1px 1px #eee,-2px 2px #EEE,-3px 3px #eee,-4px 4px #eee,-5px 5px #eee;
 	min-width: 400px;
 }
-
 ::-webkit-input-placeholder {
 	color: black;
 	font-weight: bold;
@@ -71,7 +70,6 @@ h1 {
 	color: black;
 	font-weight: bold;
 }
-
 .videorapper {
 	float: left;
 }
@@ -102,7 +100,6 @@ h1 {
 	font-size: 12px;
 	margin: 20px 0 0 0;
 }
-
 #examples span {
 	cursor: pointer;
 	text-decoration: underline;
@@ -112,7 +109,6 @@ h1 {
 #examples span:hover {
 	opacity: 1;
 }
-
 @-webkit-keyframes blink_on {
 	0% {
 		opacity: 1.0;
@@ -126,7 +122,6 @@ h1 {
 	100% {
 		opacity: 0.0;
 	}
-
 }
 @-moz-keyframes blink_on {
 	0% {
@@ -141,7 +136,6 @@ h1 {
 	100% {
 		opacity: 0.0;
 	}
-
 }
 blink {
 	-moz-animation-name: blink_on;
@@ -160,7 +154,6 @@ a {
 a:visited {
 	color: blue;
 }
-
 h2 {
 	margin: 10px 0 10px 0;
 	font-size: 18px;
