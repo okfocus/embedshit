@@ -1,3 +1,3 @@
 http://embedshit.com
 
-on OKFocus original series. 
+an OKFocus original series. 
