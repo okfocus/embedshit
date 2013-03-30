@@ -317,5 +317,6 @@ $(function(){
     $("#embed_code").val( $(".video_rapper").html() );
   }
 
+	init();
 });
 
