@@ -47,10 +47,12 @@ h1 {
 	font-size: 14px;
 	color: black;
 	background: #eee;
+	padding: 15px 10px;
+	/*
 	border: 1px white;
 	outline: 0;
-	padding: 15px 10px;
 	box-shadow: -1px 1px #eee,-2px 2px #EEE,-3px 3px #eee,-4px 4px #eee,-5px 5px #eee;
+	*/
 	min-width: 400px;
 }
 ::-webkit-input-placeholder {
