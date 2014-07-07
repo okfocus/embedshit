@@ -80,27 +80,30 @@ $(function(){
   // Given a URL, determine if it's a Youtube, Vimeo or Vine and get the ID
   function determineProvider (url) {
     if (/youtube.googleapis.com/.test(url)){
-      return { "provider" : "youtube", "id" : url.slice(url.indexOf('v/') + 2).toString() };
+      var pos = url.indexOf('v/') + 2
+      return { "provider": "youtube", "id": url.slice(pos, pos+11).toString() };
     }
     else if (/youtube.com\/v\//.test(url)){
-      return { "provider" : "youtube", "id" : url.slice(url.indexOf('v/') + 2).toString() };
+      var pos = url.indexOf('v/') + 2
+      return { "provider": "youtube", "id": url.slice(pos, pos+11).toString() };
     }
     else if (/youtube.com/.test(url)){
-      return { "provider" : "youtube", "id" : url.slice(url.indexOf('v=') + 2).toString() };
+      var pos = url.indexOf('v=') + 2
+      return { "provider": "youtube", "id": url.slice(pos, pos+11).toString() };
     }
     else if (/vimeo.com/.test(url)) {
-      return { "provider" : "vimeo", "id" : url.split('/')[3].toString() };
+      return { "provider": "vimeo", "id": url.split('/')[3].toString() };
     }  
     else if (/vine.co/.test(url)){
-      return { "provider" : "vine", "id" : url.slice(url.indexOf('v/') + 2).toString().replace(/\/.*/,"") };
+      return { "provider": "vine", "id": url.slice(url.indexOf('v/') + 2).toString().replace(/\/.*/,"") };
     }
-    else if (/[A-Za-z0-9_]+/.test(url)) {
-      var id = new String(url.match(/[A-Za-z0-9_]+/));
+    else if (/[-A-Za-z0-9_]+/.test(url)) {
+      var id = new String(url.match(/[-A-Za-z0-9_]+/));
       if (id.length == 11) {
-        return { "provider" : "youtube", "id" : id };
+        return { "provider": "youtube", "id": id };
       }
       else if (parseInt(id).toString() == id) {
-        return { "provider" : "vimeo", "id" : id };
+        return { "provider": "vimeo", "id": id };
       }
     }
     throw "Invalid video source";
@@ -122,6 +125,7 @@ $(function(){
     $("#fields").show();
     $("#fields input").hide();
     $("#fields label").hide();
+    $("#fields span").hide();
     $("." + video.provider).show().each(function(){
       $(this).next("label").show();
     });
@@ -241,11 +245,19 @@ $(function(){
       }
       params.push( this.name + "=" + this.value );
     });
+    
+    var mins = parseInt( $(".time [name=startMins]").val(), 10);
+    var secs = parseInt( $(".time [name=startSecs]").val(), 10);
+    if (! isNaN(mins) && ! isNaN(secs) && (mins != 0 || secs != 0)) {
+      params.push("start=" + (mins*60 + secs));
+    }
+
     if ($("[name=loop]:checked")) params.push( "playlist=" + v.id );
     if (params.length) src += "?" + params.join("&");
+
     setCropDimensions( w, h );
     $iframe.attr("src", src);
-    $("#embed_code").val( $(".video_rapper").html() );
+    $("#embed_code").val( $(".video_rapper").html().replace(/&amp;/g, "&") );
   }
 
   // Initialize the Vimeo embed apparatus

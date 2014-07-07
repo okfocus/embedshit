@@ -15,6 +15,7 @@ body {
 #provider {
 	margin: 10px 0;
 	font-style: italic;
+	display: none;
 }
 #fields input {
 	display: none;
@@ -97,6 +98,11 @@ h1 {
 }
 .clear {
 	clear: both;
+}
+
+.time input {
+	width: 40px;
+	text-align: right;
 }
 
 #examples {
