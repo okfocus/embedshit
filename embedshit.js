@@ -266,7 +266,7 @@ $(function(){
     $("#aspect").show();
     $("[name=mute]").removeAttr("checked");
 
-    var src = "http://player.vimeo.com/video/" + v.id + '?api=1&js_api=1&title=0&byline=0&portrait=0&playbar=0&player_id=okplayer';
+    var src = "http://player.vimeo.com/video/" + v.id + '?api=1&title=0&byline=0&portrait=0&playbar=0&player_id=okplayer';
 
     if ($("[name=loop]:checked").length > 0) src += "&loop=1";
     else src += "&loop=0";
